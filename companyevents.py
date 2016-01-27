@@ -45,3 +45,5 @@ class EventBook:
         if 'Date' in self.book.columns:
             self.book.Date = pd.to_datetime(self.book.Date)
             self.book = self.book.sort('Date')
+
+data
