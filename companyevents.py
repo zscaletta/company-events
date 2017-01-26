@@ -46,4 +46,27 @@ class EventBook:
             self.book.Date = pd.to_datetime(self.book.Date)
             self.book = self.book.sort('Date')
 
-data
+
+def djia_earnings_calendar(beg_date=''):
+	# creates an eventbook for earnings releases of companies in the dow jones 30
+	# use as template for looping through list of symbols, searching strings, and slicing by date
+    dj = ce.EventBook()
+    
+    symbs_found = 0
+    for symbol in djia_symbols:
+        tst = dj.get_events(symbol, add_to_book=True)
+        if len(tst) > 0:
+            symbs_found = symbs_found + 1
+    if len(djia_symbols) == symbs_found:
+        print('events found for all symbs in djia_symbols')
+    
+    dj.book['Event'] = dj.book['Event'].str.upper()
+    djia_earnings = dj.book[dj.book['Event'].str.contains('EARNINGS')]
+    
+    
+    if beg_date:
+		## takes yyyy-mm-dd format, or i guess anything else pandas will index on
+		## example djia_earnings_calendar(beg_date='2017-01-20')
+        djia_earnings = djia_earnings[djia_earnings['Date'] > beg_date]
+        
+    return djia_earnings
